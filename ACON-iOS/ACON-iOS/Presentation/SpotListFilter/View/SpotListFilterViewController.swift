@@ -240,58 +240,39 @@ extension SpotListFilterViewController {
     
     // MARK: - UI -> VM
     
-    func extractRestaurantFilter() -> SpotFilterListModel {
-        let restaurantFeatures = SpotType.RestaurantFeatureType.allCases
-        var restaurantFeatureOptionList: [String] = []
+    func extractSpotFilterList(spotType: SpotType) -> SpotFilterListModel {
+        let optionServerkeys = {
+            switch spotType {
+            case .restaurant: SpotType.RestaurantFeatureType.allCases.map { return $0.serverKey }
+            case .cafe: SpotType.CafeFeatureType.allCases.map { return $0.serverKey }
+            }
+        }()
+        
+        var optionList: [String] = []
         
         for (i, button) in spotListFilterView.firstLineSpotTagStackView.arrangedSubviews.enumerated() {
             let tagButton = button as? FilterTagButton ?? UIButton()
             if tagButton.isSelected {
-                restaurantFeatureOptionList.append(restaurantFeatures[i].serverKey)
+                optionList.append(optionServerkeys[i])
             }
         }
         
         for (i, button) in spotListFilterView.secondLineSpotTagStackView.arrangedSubviews.enumerated() {
             let tagButton = button as? FilterTagButton ?? UIButton()
             if tagButton.isSelected {
-                restaurantFeatureOptionList.append(restaurantFeatures[i + 5].serverKey)
+                optionList.append(optionServerkeys[i + spotType.firstLineCount])
             }
         }
         
         let restaurantFilterList = SpotFilterListModel(
             category: SpotType.FilterCategoryType.restaurantFeature,
-            optionList: restaurantFeatureOptionList
+            optionList: optionList
         )
         
         return restaurantFilterList
     }
     
-    func extractCafeFilter() -> SpotFilterListModel {
-        let cafeFeatures = SpotType.CafeFeatureType.allCases
-        var cafeFeatureOptionList: [String] = []
-        for (i, button) in spotListFilterView.firstLineSpotTagStackView.arrangedSubviews.enumerated() {
-            let tagButton = button as? FilterTagButton ?? UIButton()
-            if tagButton.isSelected {
-                cafeFeatureOptionList.append(cafeFeatures[i].serverKey)
-            }
-        }
-        
-        for (i, button) in spotListFilterView.secondLineSpotTagStackView.arrangedSubviews.enumerated() {
-            let tagButton = button as? FilterTagButton ?? UIButton()
-            if tagButton.isSelected {
-                cafeFeatureOptionList.append(cafeFeatures[i + 4].serverKey)
-            }
-        }
-        
-        let cafeFilterList = SpotFilterListModel(
-            category: SpotType.FilterCategoryType.cafeFeature,
-            optionList: cafeFeatureOptionList
-        )
-        
-        return cafeFilterList
-    }
-    
-    func extractCompanionFilter() -> SpotFilterListModel {
+    func extractCompanionFilterList() -> SpotFilterListModel {
         let companionType = SpotType.CompanionType.allCases
         var companionOptionList: [String] = []
         
