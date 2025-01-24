@@ -26,4 +26,20 @@ extension String {
         return NSAttributedString(string: self, attributes: attributes)
     }
     
+    func ACAttributes(_ style: ACFontStyleType) -> [NSAttributedString.Key: Any] {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: style.font,
+            .kern: style.kerning,
+            .paragraphStyle: {
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.minimumLineHeight = style.lineHeight
+                paragraphStyle.maximumLineHeight = style.lineHeight
+                return paragraphStyle
+            }(),
+            .baselineOffset: (style.lineHeight - style.font.lineHeight) / 2
+        ]
+        
+        return attributes
+    }
+    
 }
