@@ -283,7 +283,7 @@ extension SpotListFilterViewController {
         return companionFilterList
     }
     
-    func extractVisitPurposeFilter() -> SpotFilterListModel {
+    func extractVisitPurposeFilterList() -> SpotFilterListModel {
         let visitPurpose = SpotType.VisitPurposeType.allCases
         var visitPurposeOptionList: [String] = []
         
