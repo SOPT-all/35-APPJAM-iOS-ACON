@@ -126,46 +126,38 @@ private extension SpotListFilterViewController {
     
     @objc
     func didTapConductButton() {
-        guard let spotType = viewModel.spotType.value else {
-            viewModel.spotType.value = .restaurant
-            return // TODO: 인덱스 오류 해결
-        }
+        let spotType = viewModel.spotType.value ?? .restaurant
         
+        // NOTE: 필터리스트 초기화
+        viewModel.filterList = []
+        
+        // NOTE: 태그 필터 추가
+        viewModel.filterList.append(extractSpotFilterList(spotType: spotType))
         switch spotType {
         case .restaurant:
-            let restaurantFilter = extractRestaurantFilter()
-            let companionFilter = extractCompanionFilter()
-            
-            viewModel.filterList.append(restaurantFilter)
+            let companionFilter = extractCompanionFilterList()
             viewModel.filterList.append(companionFilter)
             
         case .cafe:
-            let cafeFilter = extractCafeFilter()
-            let visitPurposeFilter = extractVisitPurposeFilter()
-            
-            viewModel.filterList.append(cafeFilter)
+            let visitPurposeFilter = extractVisitPurposeFilterList()
             viewModel.filterList.append(visitPurposeFilter)
         }
         
+        // NOTE: 슬라이더 조건 추가
         viewModel.walkingTime = self.walkingTime
         viewModel.restaurantPrice = self.restaurantPrice
         viewModel.cafePrice = self.cafePrice
         
+        // NOTE: post
         viewModel.requestLocation()
         self.dismiss(animated: true)
     }
     
     @objc func didTapResetButton() {
-        viewModel.spotType.value = nil
-        viewModel.filterList = []
-        viewModel.spotCondition = SpotConditionModel(
-            spotType: .restaurant,
-            filterList: [],
-            walkingTime: -1,
-            priceRange: -1
-        )
+        viewModel.clearFilters()
         
         viewModel.requestLocation()
+        
         self.dismiss(animated: true)
     }
     
