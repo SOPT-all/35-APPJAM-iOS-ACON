@@ -33,13 +33,6 @@ class SpotListViewModel {
     
     var cafePrice: SpotType.CafePriceType = .fiveThousand
     
-    var spotCondition = SpotConditionModel(
-        spotType: .restaurant,
-        filterList: [],
-        walkingTime: -1,
-        priceRange: -1
-    )
-    
     
     // MARK: - Methods
     
@@ -54,6 +47,14 @@ class SpotListViewModel {
     func requestLocation() {
         // 위치 권한 확인 및 업데이트 시작
         ACLocationManager.shared.checkUserDeviceLocationServiceAuthorization()
+    }
+    
+    func clearFilters() {
+        spotType.value = nil
+        filterList = []
+        walkingTime = .twentyFive
+        restaurantPrice = .fiftyThousandAbove
+        cafePrice = .aboveTenThousand
     }
     
 }
